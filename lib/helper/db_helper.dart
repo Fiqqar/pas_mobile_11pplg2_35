@@ -45,6 +45,16 @@ class DBHelper {
     return await client.delete('movie', where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<int> deleteMovieByName(String name) async {
+  final client = await db;
+  return await client.delete(
+    'movie',
+    where: 'name = ?',
+    whereArgs: [name],
+  );
+}
+
+
   Future<List<Map<String, dynamic>>> getMarkedMovie() async {
     final client = await db;
     return await client.query('movie');

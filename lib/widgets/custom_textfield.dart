@@ -29,7 +29,7 @@ class CustomTextfield extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      style: const TextStyle(color: Colors.black),
+      style: const TextStyle(color: ColorPalette.accentColor),
     );
   }
 }

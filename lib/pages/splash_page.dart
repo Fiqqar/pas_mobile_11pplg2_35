@@ -12,11 +12,12 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(margin: const EdgeInsets.only(bottom: 20), child: CircularProgressIndicator()),
+            Container(margin: const EdgeInsets.only(bottom: 20), child: CircularProgressIndicator(color: ColorPalette.accentColor,),),
             CustomText(text: "Loading...", style: TextStyle(color: ColorPalette.accentColor)),
           ],
         ),

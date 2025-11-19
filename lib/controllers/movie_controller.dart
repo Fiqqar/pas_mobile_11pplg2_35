@@ -12,13 +12,14 @@ class MovieController extends GetxController {
   var movieResponse = <Movie>[].obs;
   var movieMark = <Movie>[].obs;
   final db = DBHelper();
+  
 
   @override
   void onInit() {
     super.onInit();
     fetchMovies();
   }
-  
+
   void fetchMovies() async {
     final url = Uri.parse(ApiConfig.movies);
     try {
@@ -28,7 +29,9 @@ class MovieController extends GetxController {
         final data = jsonDecode(res.body);
         final List movieData = data;
 
-        movieResponse.assignAll(movieData.map((e) => Movie.fromJson(e)).toList());
+        movieResponse.assignAll(
+          movieData.map((e) => Movie.fromJson(e)).toList(),
+        );
       } else {
         Get.snackbar(
           'Error',
@@ -48,17 +51,36 @@ class MovieController extends GetxController {
   }
 
   markFavorite(int i) async {
-    final movie = movieResponse[i];
+  final movie = movieResponse[i];
+
+  final alreadyFav = isMovieFavorited(movie.name);
+
+  if (alreadyFav) {
+    await db.deleteMovieByName(movie.name);
+    Get.snackbar(
+      'Removed',
+      'Movie removed from favorites',
+      snackPosition: SnackPosition.BOTTOM,
+      colorText: ColorPalette.accentColor,
+    );
+  } else {
     final movieMap = {
-      'image': movie.image.medium,
+      'image': movie.image.original,
       'name': movie.name,
       'rating': movie.rating.average.toString(),
-      'category': movie.genres.join(', '),
     };
     await db.markMovie(movieMap);
-    Get.snackbar('Success', 'Movie marked as favorite', snackPosition: SnackPosition.BOTTOM);
-    getFavorite();
+    Get.snackbar(
+      'Success',
+      'Movie added to favorites',
+      snackPosition: SnackPosition.BOTTOM,
+      colorText: ColorPalette.accentColor,
+    );
   }
+
+  getFavorite();
+}
+
 
   void getFavorite() async {
     final movieList = await db.getMarkedMovie();
@@ -81,5 +103,9 @@ class MovieController extends GetxController {
     );
 
     getFavorite();
+  }
+
+  bool isMovieFavorited(String name) {
+    return movieMark.any((m) => m.name == name);
   }
 }

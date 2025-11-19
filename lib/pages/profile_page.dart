@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
 
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(),
+            child: Divider(color: ColorPalette.accentColor),
           ),
 
           Card(
@@ -69,7 +69,7 @@ class ProfilePage extends StatelessWidget {
 
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(),
+            child: Divider(color: ColorPalette.accentColor,),
           ),
 
           ElevatedButton.icon(
