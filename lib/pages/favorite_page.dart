@@ -17,6 +17,7 @@ class FavoritePage extends StatelessWidget {
           if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
+
           if (controller.movieMark.isEmpty) {
             return Center(
               child: Text(
@@ -29,96 +30,132 @@ class FavoritePage extends StatelessWidget {
               ),
             );
           }
+
           return RefreshIndicator(
             onRefresh: () async {
               controller.getFavorite();
             },
             child: ListView.builder(
               itemCount: controller.movieMark.length,
+              physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                final product = controller.movieMark[index];
+                final movie = controller.movieMark[index];
+
+                final imageUrl = movie.image.original.isNotEmpty
+                    ? movie.image.original
+                    : movie.image.medium.isNotEmpty
+                        ? movie.image.medium
+                        : "https://via.placeholder.com/300x450?text=No+Image";
+
+                final ratingText =
+                    movie.rating.average?.toStringAsFixed(1) ?? "N/A";
 
                 return Container(
-                  width: 150,
-                  margin: EdgeInsets.only(right: 16),
+                  height: 220,
+                  margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: Colors.grey.shade900.withAlpha((0.7 * 255).round()),
+                    color: Colors.grey.shade900.withOpacity(0.7),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromRGBO(255, 255, 0, 0.1),
+                        color: Colors.yellow.withOpacity(0.1),
                         blurRadius: 20,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Image.network(
-                            product.image.original,
-                            fit: BoxFit.cover,
+                  clipBehavior: Clip.antiAlias,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (c, e, s) => Container(
+                            color: Colors.grey.shade800,
+                            child: const Center(
+                              child: Icon(Icons.broken_image,
+                                  color: Colors.white54),
+                            ),
                           ),
                         ),
-                        Positioned.fill(
+                      ),
+
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.8),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        left: 12,
+                        right: 12,
+                        bottom: 16,
+                        child: Text(
+                          movie.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        left: 12,
+                        top: 12,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 18,
+                              color: ColorPalette.accentColor,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              ratingText,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Positioned(
+                        right: 12,
+                        top: 12,
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.deleteFavorite(index);
+                          },
                           child: Container(
+                            padding: EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Color.fromRGBO(0, 0, 0, 0.8),
-                                ],
-                              ),
+                              color: Colors.black.withOpacity(0.55),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.delete,
+                              color: ColorPalette.accentColor,
+                              size: 20,
                             ),
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          margin: EdgeInsets.only(
-                            bottom: 16,
-                            left: 12,
-                            right: 12,
-                          ),
-                          child: Text(
-                            product.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          margin: EdgeInsets.only(top: 16, left: 12),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                size: 18,
-                                color: ColorPalette.accentColor,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 6),
-                                child: Text(
-                                  product.rating.average.toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

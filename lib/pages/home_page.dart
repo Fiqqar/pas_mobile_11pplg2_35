@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                         children: [
                           Positioned.fill(
                             child: Image.network(
-                              controller.movieResponse[0].image.original,
+                              banner.image.original,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -70,27 +70,23 @@ class HomePage extends StatelessWidget {
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star,
-                                        size: 18,
-                                        color: ColorPalette.accentColor,
+
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: 18,
+                                      color: ColorPalette.accentColor,
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      banner.rating.average.toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 6),
-                                        child: Text(
-                                          banner.rating.average.toString(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -122,7 +118,7 @@ class HomePage extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                ),  
+                ),
               ),
             ),
             Container(
@@ -162,6 +158,7 @@ class HomePage extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
+
                           Positioned.fill(
                             child: Container(
                               decoration: BoxDecoration(
@@ -176,43 +173,71 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.bottomLeft,
-                            margin: EdgeInsets.only(
-                              bottom: 16,
-                              left: 12,
-                              right: 12,
-                            ),
-                            child: Text(
-                              movie.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.bottomLeft,
-                            margin: EdgeInsets.only(top: 16, left: 12),
-                            child: Row(
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () => controller.markFavorite(index),
-                                  icon: Icon(Icons.bookmark_border),
-                                  label: Text(''),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 6),
-                                  child: Text(
-                                    movie.rating.average.toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: Obx(() {
+                              final isFav = controller.isMovieFavorited(
+                                movie.name,
+                              );
+
+                              return GestureDetector(
+                                onTap: () => controller.markFavorite(index),
+                                child: Container(
+                                  padding: EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    shape: BoxShape.circle,
                                   ),
+                                  child: Icon(
+                                    isFav
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                    size: 20,
+                                    color: ColorPalette.accentColor,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+
+                          Positioned(
+                            bottom: 16,
+                            left: 12,
+                            right: 12,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                ),
+
+                                SizedBox(height: 6),
+
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: 16,
+                                      color: ColorPalette.accentColor,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      movie.rating.average.toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

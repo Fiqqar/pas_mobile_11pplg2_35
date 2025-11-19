@@ -15,6 +15,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -27,13 +28,13 @@ class LoginPage extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: ColorPalette.accentColor,
                   ),
                 ),
                 const SizedBox(height: 10),
                 CustomText(
                   text: 'Please enter your username and password',
-                  style: const TextStyle(fontSize: 16, color: Colors.black54),
+                  style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 217, 255, 113)),
                 ),
                 const SizedBox(height: 20),
                 Container(
@@ -58,7 +59,7 @@ class LoginPage extends StatelessWidget {
                   } else {
                     return SubmitButton(
                       label: 'Login',
-                      labelColor: Colors.black,
+                      labelColor: ColorPalette.accentColor,
                       onPressed: () {
                         controller.login();
                       },
